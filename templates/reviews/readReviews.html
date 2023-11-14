@@ -1,0 +1,44 @@
+{% extends "home/base.html" %}
+{% block body_block %}
+{% load static %}
+
+ <link rel="stylesheet" href="{% static 'home/css/bootstrap.min.css' %}">
+ <link rel="stylesheet" href="{% static 'home/css/Articles-Cards-images.css' %}">
+
+    <div class="container py-4 py-xl-5">
+        <div class="row mb-5">
+            <div class="col-md-8 col-xl-6 text-center mx-auto">
+                <h2>Reviews</h2>
+                <p class="w-lg-50">Read reviews.</p>
+            </div>
+        </div>
+        <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3">
+            {% if reviews %}
+            {% for review in reviews %}
+            <div class="col">
+                <div class="card"><img class="card-img-top w-100 d-block fit-cover" style="height: 200px;" src="https://www.ecpubliclibrary.info/wp-content/uploads/2023/08/reshot-illustration-education-books-UVBH2DP357-2.png" alt="">
+                    <div class="card-body p-4">
+                        <p class="text-primary card-text mb-0">{{ review.title }}</p>
+                        <p class="card-text"><b>Rating : {{ review.rating }}</b></p>
+                        <h4 class="card-title">{{ review.review_subject }}</h4>
+                        <p class="card-text">{{ review.review_text }}</p>
+                        <div class="d-flex"><img class="rounded-circle flex-shrink-0 me-3 fit-cover" width="50" height="50" src="https://cdn.bootstrapstudio.io/placeholders/1400x800.png" alt="">
+                            <div>
+                                <p class="text-muted mb-0">By - {{ review.user }}</p>
+                                <p class="text-muted mb-0">At - {{ review.date }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="col-md-8 col-xl-6 text-center mx-auto">
+                <h4>No reviews available yet for this book.</h4>
+            </div>
+           {% endif %}
+        </div>
+    </div>
+    <script src="{% static 'home/js/bootstrap.min.js' %}"></script>
+
+{% endblock %}

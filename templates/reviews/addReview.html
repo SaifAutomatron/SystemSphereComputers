@@ -1,0 +1,25 @@
+{% extends "home/base.html" %}
+{% block body_block %}
+{% load static %}
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'home/css/add-review-page.css' %}">
+<main>
+    <div class="container" class="form-group">
+      <h1>Write a Review</h1>
+      <form method="POST" id="review-form">
+          {{ form.as_p }}
+          {% csrf_token %}
+         <input type="submit" class="btn btn-primary" value="Submit">
+        <input type="button" class="btn btn-secondary" value="Cancel" onclick="window.location.href='{% url 'home:index' %}'">
+          {% if error %}
+          <div class="text-danger">{{ error }}</div>
+          {% elif success %}
+          <div class="alert alert-success">{{ success }}</div>
+          {% endif %}
+      </form>
+    </div>
+</main>
+
+{% endblock %}
+

@@ -1,0 +1,17 @@
+{% extends "home/base.html" %}
+{% block body_block %}
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'home/css/add-review-page.css' %}">
+
+<div class="container" class="form-group">
+      <h1>Edit your Review</h1>
+  <form  method="POST" id="review-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" class="btn btn-primary" value="Submit">
+    <input type="button" class="btn btn-secondary" value="Cancel" onclick="window.location.href='{% url 'reviews:my_reviews' %}'">
+  </form>
+</div>
+
+{% endblock %}

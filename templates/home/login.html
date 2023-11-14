@@ -1,0 +1,29 @@
+{% extends 'home/base.html' %}
+{% block body_block %}
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'home/css/login.css' %}">
+
+  <div class="container">
+    <div class="jumbotron">
+      <h1>Please Login</h1>
+
+        <form method="post" action="{% url 'home:user_login' %}">
+          {% csrf_token %}
+          <label for="username">&nbsp;</label>
+          <input type="text" name="username" placeholder="Username">
+          <label for="password"></label>
+          <input type="password" name="password" placeholder="Password">
+          <input type="submit" name="" value="Login">
+          {% if error_message %}
+          <div class="text-danger">{{ error_message }}</div>
+          {% endif %}
+        </form>
+
+    </div>
+  </div>
+
+
+{% endblock %}
+
+

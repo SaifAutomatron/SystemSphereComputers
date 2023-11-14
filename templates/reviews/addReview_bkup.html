@@ -1,0 +1,21 @@
+{% extends "home/base.html" %}
+{% block body_block %}
+{% load static %}
+<main>
+    <h2>Write your review!</h2>
+    <div class="container">
+      <form method="POST">
+          {{ form.as_p }}
+          {% csrf_token %}
+         <input type="submit" class="btn btn-primary" value="Submit">
+        <input type="button" class="btn btn-secondary" value="Cancel" onclick="window.location.href='{% url 'home:index' %}'">
+          {% if error %}
+          <div class="text-danger">{{ error }}</div>
+          {% elif success %}
+          <div class="alert alert-success">{{ success }}</div>
+          {% endif %}
+      </form>
+    </div>
+</main>
+
+{% endblock %}
