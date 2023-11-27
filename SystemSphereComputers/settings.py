@@ -88,8 +88,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'SystemSphere',
         'USER': 'admin',
-        'PASSWORD': 'MySQL0830',
-        'HOST': 'database-1.cls3ixt3uhwa.us-east-1.rds.amazonaws.com',
+        'PASSWORD': 'CPPproject0830',
+        'HOST': 'database-1.cjlcslhwt9tq.us-east-1.rds.amazonaws.com',
         'PORT': 3306,
     }
 }
