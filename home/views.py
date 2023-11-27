@@ -28,7 +28,10 @@ class IndexView(TemplateView):
 
 class ItemCreateView(CreateView):
     model = Items
+    item_id=Items.objects.order_by('-id').first().id
+    value=f"https://system-sphere-bucket.s3.amazonaws.com/item{item_id}.jpg"
     form_class = ItemsForm
+    form_class.base_fields['image_url'].initial = value
     template_name = 'home/add_product.html'
     success_url = reverse_lazy("home:index")
 
@@ -39,11 +42,12 @@ class ItemCreateView(CreateView):
 
         if image:
             image_name = image.name
-            new_filename = "test"
+            new_filename = "item"
+            item_id=Items.objects.order_by('-id').first().id
             # Get the file extension
-            file_extension = os.path.splitext(image_name)[1]
+            #file_extension = os.path.splitext(image_name)[1]
             # Combine the new filename and original extension
-            new_file_name_with_extension = f"{new_filename}{file_extension}"
+            new_file_name_with_extension = f"{new_filename}{item_id}.jpg"
             # Assign the new filename to the file object
             image.name = new_file_name_with_extension
             form.instance.item_pic = image

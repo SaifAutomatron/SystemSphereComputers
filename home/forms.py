@@ -7,5 +7,8 @@ class ItemsForm(forms.ModelForm):
     class Meta:
         model = Items
         fields = '__all__'
-        exclude = ('overall_rating', 'image_url',)
+        exclude = ('overall_rating',)
+        widgets = {
+          'image_url': forms.HiddenInput(),
+         }
 

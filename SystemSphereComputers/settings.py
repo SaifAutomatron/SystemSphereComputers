@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-c0mr7phx2y6h490@6a(8^tcuh@0ktc*%64nb!1&k8bd-%)*k+_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -73,6 +73,10 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'SystemSphereComputers.wsgi.application'
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://0ea1843ea79544099a21014e5c96f23a.vfs.cloud9.us-east-1.amazonaws.com',
+]
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -140,14 +144,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # AWS:
 
 # s3:
-AWS_ACCESS_KEY_ID = 'your-access-key-id'
-AWS_SECRET_ACCESS_KEY = 'your-secret-access-key'
-AWS_STORAGE_BUCKET_NAME = 'test-cpp-app'
+#AWS_ACCESS_KEY_ID = 'your-access-key-id'
+#AWS_SECRET_ACCESS_KEY = 'your-secret-access-key'
+AWS_STORAGE_BUCKET_NAME = 'system-sphere-bucket'
 AWS_S3_REGION_NAME = 'us-east-1'
 
-DEFAULT_FILE_STORAGE = 'your_project.storage_backends.MediaStorage'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 
-class MediaStorage(S3Boto3Storage):
-    location = 'media'
-    file_overwrite = False
