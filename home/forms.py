@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import UserProfileInfo, Items
+from .models import Items
+from django.contrib.auth.forms import UserCreationForm
 
 
 class ItemsForm(forms.ModelForm):
@@ -12,3 +13,11 @@ class ItemsForm(forms.ModelForm):
           'image_url': forms.HiddenInput(),
          }
 
+
+class UserSignupForm(UserCreationForm):
+    
+    password = forms.CharField(widget=forms.PasswordInput())
+
+    class Meta():
+        model = User
+        fields = ('username', 'email', 'password')

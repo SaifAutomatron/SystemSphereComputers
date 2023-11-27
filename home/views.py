@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.generic import (View, TemplateView, ListView, DetailView, CreateView, DeleteView, UpdateView)
 from . import awslib
 from .models import Items
-from .forms import ItemsForm
+from .forms import ItemsForm, UserSignupForm
 import random
 from django.utils.text import slugify
 import os
@@ -56,3 +56,11 @@ class ItemCreateView(CreateView):
             return super().form_valid(form)
         else:
             return HttpResponseBadRequest("No 'image' file submitted")
+
+
+
+class SignUpView(CreateView):
+    template_name = 'home/signup.html'
+    form_class = UserSignupForm
+    success_url = reverse_lazy('home:index')
+    

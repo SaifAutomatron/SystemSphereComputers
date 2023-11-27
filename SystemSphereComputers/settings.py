@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import boto3
 from storages.backends.s3boto3 import S3Boto3Storage
+from home import awslib
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -87,8 +88,8 @@ DATABASES = {
         # 'NAME': BASE_DIR / 'db.sqlite3',
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'SystemSphere',
-        'USER': 'admin',
-        'PASSWORD': 'CPPproject0830',
+        'USER': awslib.get_secret('prod/db_creds')['DB_USER'],
+        'PASSWORD': awslib.get_secret('prod/db_creds')['DB_PASSWORD'],
         'HOST': 'database-1.cjlcslhwt9tq.us-east-1.rds.amazonaws.com',
         'PORT': 3306,
     }

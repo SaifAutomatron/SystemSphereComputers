@@ -9,6 +9,7 @@ app_name = 'home'
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
     path('addItem/', views.ItemCreateView.as_view(), name='add_item'),
+    path('signup/', views.SignUpView.as_view(), name='signup'),
 ]
 
 
