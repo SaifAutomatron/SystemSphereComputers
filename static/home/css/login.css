@@ -1,0 +1,28 @@
+html {
+  background-color: #214c84;
+  background-blend-mode: overlay;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url(https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExa2Z2dGRyNTIyamJnOXhtbWYwcmxwOXZ3MDd1MGIzcDNtMm04dHc1YiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/dalAKBkBak1S8/giphy.gif);
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+}
+
+
+form {
+  max-width: 800px;
+  padding: 50px 70px;
+  border-radius: 10px;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+}
+
+
+@media (max-width: 576px) {
+  .registration-form form {
+    padding: 50px 20px;
+  }
+}
+

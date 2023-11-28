@@ -2,14 +2,16 @@ import boto3
 from botocore.exceptions import ClientError
 import json
 
-def get_secret(secret_name):
-    region_name = "us-east-1"
+AWS_REGION = 'us-east-1'
+AWS_SNS_TOPIC_ARN = 'arn:aws:sns:us-east-1:337084155662:SystemSphere-Notifier'
 
+
+def get_secret(secret_name):
     # Create a Secrets Manager client
     session = boto3.session.Session()
     client = session.client(
         service_name='secretsmanager',
-        region_name=region_name
+        region_name=AWS_REGION
     )
 
     try:
@@ -34,4 +36,33 @@ def get_secret(secret_name):
             print(f"Error retrieving the secret with name '{secret_name}': {e}")
 
 
+def subscribe_email_to_sns(email_address):
+    sns_client = boto3.client('sns', region_name=AWS_REGION)
+    response = sns_client.subscribe(
+        TopicArn=AWS_SNS_TOPIC_ARN,
+        Protocol='email',
+        Endpoint=email_address,
+    )
+    return response
+    
+    
+
+def send_email_sns(subject, message, email):
+    sns_client = boto3.client('sns', region_name=AWS_REGION)
+
+    response = sns_client.publish(
+        TopicArn=AWS_SNS_TOPIC_ARN,
+        Subject=subject,
+        Message=message,
+        MessageStructure='string',
+    )
+
+    return response
+    
+    
+    
+subject = 'Test Mail'
+message = 'This is test email'
+email = 'mohammaduchiha83@gmail.com' 
+print(send_email_sns(subject, message, email))
 

@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.http import HttpResponse, HttpResponseBadRequest
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.views.generic import (View, TemplateView, ListView, DetailView, CreateView, DeleteView, UpdateView)
 from . import awslib
 from .models import Items
@@ -63,4 +65,21 @@ class SignUpView(CreateView):
     template_name = 'home/signup.html'
     form_class = UserSignupForm
     success_url = reverse_lazy('home:index')
+    
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        # Subscribe user's email to SNS
+        email_address = form.cleaned_data['email']
+        print(email_address)
+        awslib.subscribe_email_to_sns(email_address)
+
+        return response
+    
+
+
+class UserProfileView(LoginRequiredMixin, DetailView):
+    model = User
+    template_name = 'home/index.html'  # Provide the path to your template
+    context_object_name = 'user'
     

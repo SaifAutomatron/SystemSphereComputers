@@ -13,6 +13,8 @@ class Items(models.Model):
     image_url = models.URLField()
     overall_rating = models.IntegerField(default=1)
     item_pic = models.ImageField(storage=MyStorage() ,blank=True)
+    on_sale = models.BooleanField(default=False)
+    available_online = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
