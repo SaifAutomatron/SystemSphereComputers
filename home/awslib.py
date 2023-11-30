@@ -58,11 +58,3 @@ def send_email_sns(subject, message, email):
     )
 
     return response
-    
-    
-    
-subject = 'Test Mail'
-message = 'This is test email'
-email = 'mohammaduchiha83@gmail.com' 
-print(send_email_sns(subject, message, email))
-

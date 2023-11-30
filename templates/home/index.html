@@ -34,14 +34,13 @@
                                         <div class="bi-star-fill"></div>
                                         {% endfor %}
                                     </div>
-                                    <!-- Product price-->
-                                    $40.00
+                                    € {{ item.price }}
                                 </div>
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                                 {% if item.available_online %}
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Buy Now!</a></div>
+                                <button data-product="{{item.id}}" data-action="add" class="btn btn-outline-secondary add-btn text-center update-cart">Add to Cart</button>
                                 {% else %}
                                 <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Available on stores</a></div>
                                 {% endif %}

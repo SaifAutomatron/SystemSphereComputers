@@ -1,23 +1,12 @@
-html {
-  background-color: #214c84;
-  /*display: flex;
-  align-items: center;
-  justify-content: center;*/
-  background-image: url(https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExa2Z2dGRyNTIyamJnOXhtbWYwcmxwOXZ3MDd1MGIzcDNtMm04dHc1YiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/dalAKBkBak1S8/giphy.gif);
-  background-repeat: no-repeat;
-  background-size: cover;
-  height: 100%;
-}
 
 .position-relative {
-  background-color: #214c84;
   display: flex;
   align-items: center;
   justify-content: center;
   background-image: url(https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExa2Z2dGRyNTIyamJnOXhtbWYwcmxwOXZ3MDd1MGIzcDNtMm04dHc1YiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/dalAKBkBak1S8/giphy.gif);
   background-repeat: no-repeat;
   background-size: cover;
-  height: 100%;
+  height: 100vh; /* Set the height to 100% of the viewport height */
 }
 
 
