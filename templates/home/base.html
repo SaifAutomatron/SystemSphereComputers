@@ -96,11 +96,6 @@
                         <a class="nav-link" href="{% url 'home:logout' %}">Logout</a>
                         {% endif %}
                     <form class="d-flex" style="margin-left: 15px;">
-                        <!--<button class="btn btn-outline-dark" type="submit">
-                            <i class="bi-cart-fill me-1"></i>
-                            Cart
-                            <span class="badge bg-dark text-white ms-1 rounded-pill">{{cartItems}}</span>
-                        </button>-->
                         <a href="{% url 'home:cart' %}" class="btn btn-outline-dark">
                            <i class="bi-cart-fill me-1"></i>
                            Cart

@@ -1,9 +1,21 @@
 from django.db import models
 from django.contrib.auth.models import User
 from storages.backends.s3boto3 import S3Boto3Storage
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class MyStorage(S3Boto3Storage):
     bucket_name = 'system-sphere-bucket'
+
+
+class Customer(models.Model):
+	user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
+	name = models.CharField(max_length=200, null=True)
+	email = models.CharField(max_length=200)
+
+	def __str__(self):
+		return self.name
+
 
 # Create your models here.
 class Items(models.Model):
@@ -23,7 +35,7 @@ class Items(models.Model):
 		
 		
 class Order(models.Model):
-	customer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
 	date_ordered = models.DateTimeField(auto_now_add=True)
 	complete = models.BooleanField(default=False)
 	transaction_id = models.CharField(max_length=100, null=True)
@@ -77,3 +89,16 @@ class ShippingAddress(models.Model):
 
 	def __str__(self):
 		return self.address
+		
+		
+# Signal to create Customer instance when User is created
+@receiver(post_save, sender=User)
+def create_customer(sender, instance, created, **kwargs):
+    if created:
+        Customer.objects.create(user=instance)
+
+
+# Signal to save Customer instance when User is saved
+@receiver(post_save, sender=User)
+def save_customer(sender, instance, **kwargs):
+    instance.customer.save()

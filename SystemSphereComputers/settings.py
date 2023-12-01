@@ -95,6 +95,16 @@ DATABASES = {
     }
 }
 
+#CACHES = {
+#    'default': {
+#        'BACKEND': 'django_redis.cache.RedisCache',
+#        'LOCATION': 'redis://system-sphere-cluster.xefzmj.clustercfg.use1.cache.amazonaws.com:6379',
+#        'OPTIONS': {
+#            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+#        }
+#    }
+#}
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -153,5 +163,8 @@ AWS_STORAGE_BUCKET_NAME = 'system-sphere-bucket'
 AWS_S3_REGION_NAME = 'us-east-1'
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+STRIPE_PUBLIC_KEY = 'pk_test_51OIH6GHBgDnejRm5tmJa0Kdl5lI6Fuek30TPMbLPzSe4YDO3wuIMajcHkRUymwVi3dNoSPGcBnOWKZk2yRlG3dJE00bMH0C1sU'
+STRIPE_SECRET_KEY = 'ysk_test_51OIH6GHBgDnejRm5rXYoF7gXBVGEycApxU5ADDnpl5401faw5NnVHE5b4JUmeoMTNWrg9Td92SAPZdF6bKHQnArJ00CEzl1cCT'
 
 

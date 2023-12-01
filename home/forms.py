@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Items
+from .models import Items, Customer
 from django.contrib.auth.forms import UserCreationForm
 
 

@@ -6,13 +6,19 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.views.generic import (View, TemplateView, ListView, DetailView, CreateView, DeleteView, UpdateView)
 from . import awslib
-from .models import Items , Order, OrderItem, ShippingAddress
+from .models import Items , Order, OrderItem, ShippingAddress, Customer
 from .forms import ItemsForm, UserSignupForm
 import random
 from django.utils.text import slugify
 import os
 from .utils import cookieCart, cartData, guestOrder
 from django.http import JsonResponse
+import json
+import stripe
+from django.conf import settings
+from datetime import datetime
+
+
 
 
 class IndexView(TemplateView):
@@ -30,7 +36,9 @@ class IndexView(TemplateView):
         rating = {item.name: list(range(random.randint(0, 5))) for item in items}
         context['rating'] = rating
         return context
-
+        
+        
+        
 
 class ItemCreateView(LoginRequiredMixin, CreateView):
     model = Items
@@ -83,34 +91,32 @@ class SignUpView(CreateView):
 
 
 class UserProfileView(LoginRequiredMixin, DetailView):
-    model = User
+    model = Customer
     template_name = 'home/index.html'  # Provide the path to your template
     context_object_name = 'user'
 
 
 class CartView(View):
     def get(self, request, *args, **kwargs):
-        print(request)
         data = cartData(request)
-        print(data)
         cartItems = data['cartItems']
-        print(cartItems)
         order = data['order']
-        print(order)
         items = data['items']
-        print(items)
         context = {'items': items, 'order': order, 'cartItems': cartItems}
         return render(request, 'home/cart.html', context)
 
 
-class CheckoutView(View):
+class CheckoutView(LoginRequiredMixin, View):
+    template_name = 'home/checkout.html'
+
     def get(self, request, *args, **kwargs):
         data = cartData(request)
         cartItems = data['cartItems']
         order = data['order']
         items = data['items']
-        context = {'items': items, 'order': order, 'cartItems': cartItems}
-        return render(request, 'home/checkout.html', context)
+        stripe_public_key = settings.STRIPE_PUBLIC_KEY
+        context = {'items': items, 'order': order, 'cartItems': cartItems, 'stripe_public_key': stripe_public_key}
+        return render(request, self.template_name, context)
 
 
 class UpdateItemView(View):
@@ -141,9 +147,9 @@ class UpdateItemView(View):
 
 
 
-class ProcessOrderView(View):
+class ProcessOrderView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
-        transaction_id = datetime.datetime.now().timestamp()
+        transaction_id = datetime.now().timestamp()
         data = json.loads(request.body)
 
         if request.user.is_authenticated:

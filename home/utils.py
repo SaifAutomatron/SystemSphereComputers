@@ -1,88 +1,105 @@
 import json
 from .models import *
-from django.contrib.auth.models import User
 
+# Updated cookieCart function
 def cookieCart(request):
+    try:
+        cart = json.loads(request.COOKIES.get('cart', '{}'))
+    except json.JSONDecodeError:
+        cart = {}
 
-	#Create empty cart for now for non-logged in user
-	try:
-		cart = json.loads(request.COOKIES['cart'])
-	except:
-		cart = {}
-		print('CART:', cart)
+    items = []
+    order = {'get_cart_total': 0, 'get_cart_items': 0, 'shipping': False}
+    cart_items = order['get_cart_items']
 
-	items = []
-	order = {'get_cart_total':0, 'get_cart_items':0, 'shipping':False}
-	cartItems = order['get_cart_items']
+    for item_id, item_data in cart.items():
+        try:
+            quantity = item_data.get('quantity', 0)
 
-	for i in cart:
-		#We use try block to prevent items in cart that may have been removed from causing error
-		try:	
-			if(cart[i]['quantity']>0): #items with negative quantity = lot of freebies  
-				cartItems += cart[i]['quantity']
+            if quantity > 0:
+                cart_items += quantity
 
-				product = Items.objects.get(id=i)
-				print(f"product name {product.name} --- price: {product.price}")
-				total = (product.price * cart[i]['quantity'])
+                product = Items.objects.get(id=item_id)
+                total = product.price * quantity
 
-				order['get_cart_total'] += total
-				order['get_cart_items'] += cart[i]['quantity']
+                order['get_cart_total'] += total
+                order['get_cart_items'] += quantity
 
-				item = {
-				'id':product.id,
-				'product':{'id':product.id,'name':product.name, 'price':product.price, 
-				'image_url':product.image_url}, 'quantity':cart[i]['quantity'],
-				'available_online':product.available_online,'get_total':total,
-				}
-				items.append(item)
+                item = {
+                    'id': product.id,
+                    'product': {
+                        'id': product.id,
+                        'name': product.name,
+                        'price': product.price,
+                        'image_url': product.image_url
+                    },
+                    'quantity': quantity,
+                    'available_online': product.available_online,
+                    'get_total': total,
+                }
+                items.append(item)
 
-				if product.available_online == False:
-					order['shipping'] = True
-		except:
-			pass
-			
-	return {'cartItems':cartItems ,'order':order, 'items':items}
+                if not product.available_online:
+                    order['shipping'] = True
+        except Items.DoesNotExist:
+            pass
 
+    return {'cartItems': cart_items, 'order': order, 'items': items}
+
+# Updated cartData function
 def cartData(request):
-	if request.user.is_authenticated:
-		customer = request.user
-		order, created = Order.objects.get_or_create(customer=customer, complete=False)
-		items = order.orderitem_set.all()
-		cartItems = order.get_cart_items
-	else:
-		cookieData = cookieCart(request)
-		cartItems = cookieData['cartItems']
-		order = cookieData['order']
-		items = cookieData['items']
+    if request.user.is_authenticated:
+#        customer = request.user
+#        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+#        items = order.orderitem_set.all()
+#        cart_items = order.get_cart_items()
+        cookie_data = cookieCart(request)
+        cart_items = cookie_data['cartItems']
+        order = cookie_data['order']
+        items = cookie_data['items']
+    else:
+        cookie_data = cookieCart(request)
+        cart_items = cookie_data['cartItems']
+        order = cookie_data['order']
+        items = cookie_data['items']
 
-	return {'cartItems':cartItems ,'order':order, 'items':items}
-
+    return {'cartItems': cart_items, 'order': order, 'items': items}
 
 
 def guestOrder(request, data):
-	name = data['form']['name']
-	email = data['form']['email']
+    name = data['form']['name']
+    email = data['form']['email']
 
-	cookieData = cookieCart(request)
-	items = cookieData['items']
+    cookie_data = cookieCart(request)
+    items = cookie_data['items']
 
-	customer, created = User.objects.get_or_create(
-			email=email,
-			)
-	customer.name = name
-	customer.save()
+    # Get or create a user with the provided email
+    customer, created = Customer.objects.get_or_create(email=email)
+    
+    # Update the user's name
+    customer.username = name
+    customer.save()
 
-	order = Order.objects.create(
-		customer=customer,
-		complete=False,
-		)
+    # Create an order for the customer
+    order = Order.objects.create(
+        customer=customer,
+        complete=False,
+    )
 
-	for item in items:
-		product = ITems.objects.get(id=item['id'])
-		orderItem = OrderItem.objects.create(
-			product=product,
-			order=order,
-			quantity=(item['quantity'] if item['quantity']>0 else -1*item['quantity']), # negative quantity = freebies
-		)
-	return customer, order
+    # Add items to the order
+    for item in items:
+        try:
+            product = Items.objects.get(id=item['id'])
 
+            # Ensure quantity is non-negative
+            quantity = max(item['quantity'], 0)
+
+            order_item = OrderItem.objects.create(
+                product=product,
+                order=order,
+                quantity=quantity,
+            )
+        except Items.DoesNotExist:
+            pass
+
+    return customer, order
