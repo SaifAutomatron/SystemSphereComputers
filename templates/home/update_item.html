@@ -1,0 +1,33 @@
+{% extends 'home/base.html' %}
+{% load static %}
+{% block body_block %}
+   <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css'  %}">
+    <link rel="stylesheet" href="{% static 'assets/css/Login-Form-Basic-icons.css'  %}">
+    
+    <section class="position-relative py-4 py-xl-5">
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-6 col-xl-4">
+                    <div class="card mb-6">
+                        <div class="card-body d-flex flex-column align-items-center">
+                             <div class="text-center">
+                             <h2>Update Product Details</h2>
+                             <p>Please update details below.</p>
+                             </div>
+                            <form class="text-center" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ form.as_p}}
+                            <div class="row justify-content-center">
+                                <div class="col-md-6">
+                                    <button class="btn btn-primary w-100" type="submit">Update</button>
+                                </div>
+                            </div>
+                        </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="{% static 'assets/bootstrap/js/bootstrap.min.js' %}"></script>
+{% endblock %}

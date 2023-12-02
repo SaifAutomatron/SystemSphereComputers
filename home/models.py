@@ -102,3 +102,4 @@ def create_customer(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_customer(sender, instance, **kwargs):
     instance.customer.save()
+    

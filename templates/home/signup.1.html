@@ -1,0 +1,103 @@
+{% extends 'home/base.html' %}
+{% block body_block %}
+{% load static %}
+
+ <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css'  %}">
+    <link rel="stylesheet" href="{% static 'assets/css/Login-Form-Basic-icons.css'  %}">
+
+    <section class="position-relative py-4 py-xl-5">
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-6 col-xl-4">
+                    <div class="card mb-5" style="padding: 20px; width: 400px; margin: auto;">
+                        <div class="card-body d-flex flex-column align-items-center">
+                            <div class="text-center">
+                            <h2>Sign Up</h2>
+                            <p>Pleae enter your info.</p>
+                            </div>
+                <div class="form-container">
+                     <form class="text-center" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                    
+                        <div class="row justify-content-center">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <label for="{{ form.username.id_for_label }}"></label>
+                                    <input type="text" name="username" class="form-control" placeholder="Username" required>
+                                    {% if form.username.errors %}
+                                        <span class="text-danger">{{ form.username.errors }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="row justify-content-center">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <label for="{{ form.email.id_for_label }}"></label>
+                                    <input type="email" name="email" class="form-control" placeholder="Email" required>
+                                    {% if form.email.errors %}
+                                        <span class="text-danger">{{ form.email.errors }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="row justify-content-center">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <label for="{{ form.password1.id_for_label }}"></label>
+                                    <input type="password" name="password1" class="form-control" placeholder="Password" required>
+                                    {% if form.password1.errors %}
+                                        <span class="text-danger">{{ form.password1.errors }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="row justify-content-center">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <label for="{{ form.password2.id_for_label }}"></label>
+                                    <input type="password" name="password2" class="form-control" placeholder="Confirm Password" required>
+                                    {% if form.password2.errors %}
+                                        <span class="text-danger">{{ form.password2.errors }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                       <div class="row justify-content-center">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    {{ form.groups.label_tag }}
+                                    {{ form.groups }}
+                                    {% if form.groups.errors %}
+                                        <span class="text-danger">{{ form.groups.errors }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                                            
+                        <div class="row justify-content-center">
+                            <div class="col-md-6">
+                                <button class="btn btn-primary btn-block" type="submit">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+
+                   </div>                            
+                                <!--<p class="text-muted">Forgot your password?</p>-->
+                
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="{% static 'assets/bootstrap/js/bootstrap.min.js' %}"></script>
+
+
+{% endblock %}
+
+

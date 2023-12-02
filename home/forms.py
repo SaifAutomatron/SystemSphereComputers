@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User , Group
 from .models import Items, Customer
 from django.contrib.auth.forms import UserCreationForm
 
@@ -15,7 +15,9 @@ class ItemsForm(forms.ModelForm):
 
 
 class UserSignupForm(UserCreationForm):
+    
+    groups = forms.ModelMultipleChoiceField(queryset=Group.objects.all(), widget=forms.CheckboxSelectMultiple)
 
     class Meta():
         model = User
-        fields = ('username', 'email')
+        fields = ('username', 'email', 'password1', 'password2', 'groups')

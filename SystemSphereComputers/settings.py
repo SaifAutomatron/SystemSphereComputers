@@ -25,12 +25,12 @@ MEDIA_DIR = Path(__file__).joinpath(BASE_DIR, 'media')
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-c0mr7phx2y6h490@6a(8^tcuh@0ktc*%64nb!1&k8bd-%)*k+_'
+SECRET_KEY = awslib.get_secret('prod/stripe-keys')['DJANGO_KEY'] 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['django-env.eba-h4kntfcn.us-east-1.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['http://django-env.eba-h4kntfcn.us-east-1.elasticbeanstalk.com']
 
 # Application definition
 
@@ -95,18 +95,7 @@ DATABASES = {
     }
 }
 
-#CACHES = {
-#    'default': {
-#        'BACKEND': 'django_redis.cache.RedisCache',
-#        'LOCATION': 'redis://system-sphere-cluster.xefzmj.clustercfg.use1.cache.amazonaws.com:6379',
-#        'OPTIONS': {
-#            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-#        }
-#    }
-#}
 
-# Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -141,7 +130,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     STATIC_DIR,
 ]
-STATIC_ROOT = Path(__file__).joinpath(BASE_DIR, 'static')
+#STATIC_ROOT = Path(__file__).joinpath(BASE_DIR, 'static')
 
 # MEDIA INFORMATION:
 
@@ -149,9 +138,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = MEDIA_DIR
 
 LOGIN_URL = '/login/'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -165,7 +151,7 @@ AWS_S3_REGION_NAME = 'us-east-1'
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-STRIPE_PUBLIC_KEY = 'pk_test_51OIH6GHBgDnejRm5tmJa0Kdl5lI6Fuek30TPMbLPzSe4YDO3wuIMajcHkRUymwVi3dNoSPGcBnOWKZk2yRlG3dJE00bMH0C1sU'
-STRIPE_SECRET_KEY = 'ysk_test_51OIH6GHBgDnejRm5rXYoF7gXBVGEycApxU5ADDnpl5401faw5NnVHE5b4JUmeoMTNWrg9Td92SAPZdF6bKHQnArJ00CEzl1cCT'
+STRIPE_PUBLIC_KEY = awslib.get_secret('prod/stripe-keys')['STRIPE_PUBLIC_KEY']
+STRIPE_SECRET_KEY = awslib.get_secret('prod/stripe-keys')['STRIPE_SECRET_KEY']
 
 

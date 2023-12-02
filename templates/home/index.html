@@ -5,7 +5,7 @@
         <header class="bg-dark py-5">
             <div class="container px-4 px-lg-5 my-5">
                 <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Shop in style</h1>
+                    <h1 class="display-4 fw-bolder">BUILD YOUR RIG</h1>
                     <p class="lead fw-normal text-white-50 mb-0">Best Price - Performance computer products</p>
                 </div>
             </div>
@@ -40,10 +40,17 @@
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                                 {% if item.available_online %}
-                                <button data-product="{{item.id}}" data-action="add" class="btn btn-outline-secondary add-btn text-center update-cart">Add to Cart</button>
+                                <div class="text-center"><button data-product="{{item.id}}" data-action="add" class="btn btn-outline-dark mt-auto add-btn update-cart">Add to Cart</button></div>
                                 {% else %}
                                 <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Available on stores</a></div>
                                 {% endif %}
+                            {% if is_retailer %}
+                            <br>
+                            <div class="text-center">
+                              <a href="{% url 'home:delete_item' pk=item.id %}" class="btn btn-outline-dark mt-auto">Delete</a>
+                              <a href="{% url 'home:update_item' pk=item.id %}" class="btn btn-outline-dark mt-auto">Edit</a>
+                            </div>
+                            {% endif %} 
                             </div>
                         </div>
                     </div>
