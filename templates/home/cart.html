@@ -8,7 +8,7 @@
 				<br>
 				<a  class="btn btn-outline-dark" href="{% url 'home:index' %}">&#x2190; Continue Shopping</a>
 
-			
+			    {% if items %}
 				<table class="table">
 					<tr>
 						<th><h5>Items:<strong>{{order.get_cart_items}}</strong></h5></th>
@@ -46,6 +46,12 @@
 					<div style="flex:1"><p>€ {{item.get_total|floatformat:2}}</p></div>
 				</div>
 				{% endfor %}
+				{% else %}
+				<div class="col-md-8 col-xl-6 text-center mx-auto">
+                	<img src="https://system-sphere-bucket.s3.amazonaws.com/emptycart.jpg" alt="Empty Cart Image" style="max-width: 78%; height: auto;">
+    				<h4>Your Cart is Empty!</h4>
+				</div>
+				{% endif %}
 			</div>
 		</div>
 	</div>

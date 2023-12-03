@@ -6,7 +6,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.views.generic import (View, TemplateView, ListView, DetailView, CreateView, DeleteView, UpdateView)
 from . import awslib
-from .invoicegen import InvoiceGenerator
 from .models import Items , Order, OrderItem, ShippingAddress, Customer
 from .forms import ItemsForm, UserSignupForm
 import random
@@ -18,6 +17,8 @@ import json
 import stripe
 from django.conf import settings
 from datetime import datetime
+from retailInvoiceGenerator.retailInvoiceGenerator import InvoiceGenerator
+
 
 
 

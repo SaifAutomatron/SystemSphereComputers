@@ -30,7 +30,7 @@ SECRET_KEY = awslib.get_secret('prod/stripe-keys')['DJANGO_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['django-env.eba-h4kntfcn.us-east-1.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'home'
+    'home',
+    "whitenoise.runserver_nostatic",
 ]
 
 MIDDLEWARE = [
@@ -52,6 +53,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'SystemSphereComputers.urls'
@@ -95,6 +98,11 @@ DATABASES = {
     }
 }
 
+#STORAGES = {
+#    "staticfiles": {
+#        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+#    },
+#}
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -126,11 +134,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = '/static/'
+#STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     STATIC_DIR,
 ]
-#STATIC_ROOT = Path(__file__).joinpath(BASE_DIR, 'static')
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_HOST = "https://ddzykxa0roosv.cloudfront.net" if not DEBUG else ""
+STATIC_URL = STATIC_HOST + "/static/"
+
 
 # MEDIA INFORMATION:
 
@@ -150,6 +161,8 @@ AWS_STORAGE_BUCKET_NAME = 'system-sphere-bucket'
 AWS_S3_REGION_NAME = 'us-east-1'
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
+
 
 STRIPE_PUBLIC_KEY = awslib.get_secret('prod/stripe-keys')['STRIPE_PUBLIC_KEY']
 STRIPE_SECRET_KEY = awslib.get_secret('prod/stripe-keys')['STRIPE_SECRET_KEY']
