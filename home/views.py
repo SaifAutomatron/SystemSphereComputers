@@ -17,7 +17,7 @@ import json
 import stripe
 from django.conf import settings
 from datetime import datetime
-from retailInvoiceGenerator.retailInvoiceGenerator import InvoiceGenerator
+from . invoicegen import InvoiceGenerator
 
 
 
@@ -228,7 +228,7 @@ class ProcessOrderView(LoginRequiredMixin, View):
         
         invoice_link="https://system-sphere-bucket.s3.amazonaws.com/"+s3_file_key
         subject = 'System Sphere Computers Order'
-        message= f'You Order number {transaction_id} with amount {total} from System Sphere Computers is Successful.\nYour Invoice link: {invoice_link}'
+        message= f'You Order number {transaction_id} with amount {total} from System Sphere Computers is Successful.\nDownload Invoice at: {invoice_link}'
         email=username = request.user.email
         awslib.send_email_sns(subject, message, email)
         
