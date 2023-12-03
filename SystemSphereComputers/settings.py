@@ -30,7 +30,7 @@ SECRET_KEY = awslib.get_secret('prod/stripe-keys')['DJANGO_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['django-env.eba-h4kntfcn.us-east-1.elasticbeanstalk.com']
 
 # Application definition
 
