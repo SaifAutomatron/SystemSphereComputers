@@ -1,0 +1,15 @@
+{% extends "home/base.html" %}
+{% block body_block %}
+{% load static %}
+   
+    <link rel="stylesheet" type="text/css" href="{% static 'home/css/styles.css' %}">
+
+    <h1>Store Locations</h1>
+    <div id="map"></div>
+    <ul>
+        {% for store in stores %}
+            <li>{{ store.name }} - {{ store.address }}</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

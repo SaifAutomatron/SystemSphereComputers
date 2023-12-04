@@ -91,6 +91,16 @@ class ShippingAddress(models.Model):
 		return self.address
 		
 		
+class Store(models.Model):
+    name = models.CharField(max_length=100)
+    address = models.TextField()
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+
+    def __str__(self):
+        return self.name
+		
+		
 # Signal to create Customer instance when User is created
 @receiver(post_save, sender=User)
 def create_customer(sender, instance, created, **kwargs):

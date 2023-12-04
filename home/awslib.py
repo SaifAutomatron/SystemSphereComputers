@@ -5,7 +5,7 @@ import json
 AWS_REGION = 'us-east-1'
 AWS_SNS_TOPIC_ARN = 'arn:aws:sns:us-east-1:337084155662:SystemSphere-Notifier'
 
-
+# for retreiving secret for AWS Secretmanager
 def get_secret(secret_name):
     # Create a Secrets Manager client
     session = boto3.session.Session()
@@ -18,11 +18,7 @@ def get_secret(secret_name):
         # Retrieve the secret value
         response = client.get_secret_value(SecretId=secret_name)
         secret_string = response['SecretString']
-        # You can also access other fields such as 'SecretBinary' if needed
-
-        # Modify this part based on the structure of your secret data
         secret_data = json.loads(secret_string)
-
         return secret_data
 
     except ClientError as e:

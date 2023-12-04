@@ -42,7 +42,7 @@
                                 {% if item.available_online %}
                                 <div class="text-center"><button data-product="{{item.id}}" data-action="add" class="btn btn-outline-dark mt-auto add-btn update-cart">Add to Cart</button></div>
                                 {% else %}
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Available on stores</a></div>
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{% url 'home:stores_list' %}">Available on stores</a></div>
                                 {% endif %}
                             {% if is_retailer %}
                             <br>

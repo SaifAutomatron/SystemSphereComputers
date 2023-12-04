@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.views.generic import (View, TemplateView, ListView, DetailView, CreateView, DeleteView, UpdateView)
 from . import awslib
-from .models import Items , Order, OrderItem, ShippingAddress, Customer
+from .models import Items , Order, OrderItem, ShippingAddress, Customer, Store
 from .forms import ItemsForm, UserSignupForm
 import random
 from django.utils.text import slugify
@@ -17,12 +17,12 @@ import json
 import stripe
 from django.conf import settings
 from datetime import datetime
-from . invoicegen import InvoiceGenerator
+from . retailInvoiceGenerator import InvoiceGenerator
 
 
 
 
-
+# This view renders the product catalog page
 class IndexView(TemplateView):
     template_name = 'home/index.html'
     
@@ -32,7 +32,6 @@ class IndexView(TemplateView):
         data = cartData(self.request)
         cartItems = data['cartItems']
         check_retailer=self.request.user.is_authenticated and self.request.user.groups.filter(name='Retailer').exists()
-        print(f'--------------------- {check_retailer}')
         context = {'items': items, 'cartItems': cartItems, "is_retailer": check_retailer }
         rating = []
         for i in items:
@@ -43,7 +42,7 @@ class IndexView(TemplateView):
         
         
         
-
+# This view renders the product creation page
 class ItemCreateView(LoginRequiredMixin, CreateView):
     model = Items
     item_id=Items.objects.order_by('-id').first().id
@@ -62,42 +61,46 @@ class ItemCreateView(LoginRequiredMixin, CreateView):
             image_name = image.name
             new_filename = "item"
             item_id=Items.objects.order_by('-id').first().id
-            # Get the file extension
-            #file_extension = os.path.splitext(image_name)[1]
-            # Combine the new filename and original extension
             new_file_name_with_extension = f"{new_filename}{item_id}.jpg"
-            # Assign the new filename to the file object
             image.name = new_file_name_with_extension
             form.instance.item_pic = image
-            # Additional processing or saving the form
 
             return super().form_valid(form)
         else:
             return HttpResponseBadRequest("No 'image' file submitted")
+            
+
+# This view renders the stores list page
+class StoreListView(View):
+    template_name = 'home/store_list.html'
+
+    def get(self, request, *args, **kwargs):
+        stores = Store.objects.all()
+        context = {'stores': stores}
+        return render(request, self.template_name, context)
 
 
 
+# This view renders the product update page
 class ItemUpdateView(LoginRequiredMixin, UpdateView):
     model = Items
-    form_class = ItemsForm  # Use your form class
-    template_name = 'home/update_item.html'  # Create a template for updating an item
+    form_class = ItemsForm  
+    template_name = 'home/update_item.html'
     success_url = reverse_lazy("home:index")
 
     def form_valid(self, form):
-        # Additional processing or saving the form
         id = self.kwargs.get('pk')
-        print(f'------{id}')
         return super().form_valid(form)
         
         
-
-
+# This view renders the product delete page
 class ItemDeleteView(LoginRequiredMixin, DeleteView):
     model = Items
     template_name = 'home/delete_item.html'
     success_url = reverse_lazy("home:index")
 
 
+# This view renders the signup page
 class SignUpView(CreateView):
     template_name = 'home/signup.html'
     form_class = UserSignupForm
@@ -108,18 +111,12 @@ class SignUpView(CreateView):
         # Subscribe user's email to SNS
         email_address = form.cleaned_data['email']
         print(email_address)
-#        awslib.subscribe_email_to_sns(email_address)
+        awslib.subscribe_email_to_sns(email_address)
 
         return response
     
 
-
-class UserProfileView(LoginRequiredMixin, DetailView):
-    model = Customer
-    template_name = 'home/index.html'  # Provide the path to your template
-    context_object_name = 'user'
-
-
+# This view renders the cart page
 class CartView(View):
     def get(self, request, *args, **kwargs):
         data = cartData(request)
@@ -130,6 +127,7 @@ class CartView(View):
         return render(request, 'home/cart.html', context)
 
 
+# This view renders the checkout page
 class CheckoutView(LoginRequiredMixin, View):
     template_name = 'home/checkout.html'
 
@@ -143,6 +141,7 @@ class CheckoutView(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
 
+# This view renders the update cart item page
 class UpdateItemView(View):
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body)
@@ -170,7 +169,7 @@ class UpdateItemView(View):
         return JsonResponse('Item was added', safe=False)
 
 
-
+# This view renders the order processing page
 class ProcessOrderView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         transaction_id = str(datetime.now().timestamp()).replace('.','')
@@ -220,12 +219,13 @@ class ProcessOrderView(LoginRequiredMixin, View):
           'order_date': str(datetime.now().date())
          }
          
+        #Generating invoice and storing it to amazon s3
         invoice_generator = InvoiceGenerator(**invoice_data)
         invoice_generator.generate_invoice()
         s3_file_key=transaction_id+".pdf"
         invoice_generator.upload_to_s3(settings.AWS_STORAGE_BUCKET_NAME,s3_file_key)
         
-        
+        #sending transaction and invoice link to customer via SNS
         invoice_link="https://system-sphere-bucket.s3.amazonaws.com/"+s3_file_key
         subject = 'System Sphere Computers Order'
         message= f'You Order number {transaction_id} with amount {total} from System Sphere Computers is Successful.\nDownload Invoice at: {invoice_link}'

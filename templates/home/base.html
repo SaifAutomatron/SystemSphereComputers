@@ -85,7 +85,7 @@
                                 <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="#!">Stores</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'home:stores_list' %}">Stores</a></li>
                         {% if is_retailer %}
                         <li class="nav-item"><a class="nav-link" href="{% url 'home:add_item' %}">Add Product</a></li>
                         {% endif %}
