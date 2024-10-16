@@ -1,5 +1,3 @@
-[README.md](https://github.com/user-attachments/files/17394429/README.md)
-
 # Cloud-Based Retail Web Application
 
 This repository contains a **Django web application** named **System Sphere Computers**, a computer retail webapplication. The application leverages **AWS Cloud Services** to provide a **scalable, secure, and cost-effective Software as a Service (SaaS)** solution for managing products, customers, and orders.
